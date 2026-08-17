@@ -1,0 +1,24 @@
+{
+  "contract": "hraness.portfolio-inventory/v1",
+  "formatVersion": 1,
+  "repository": "hraness/convex",
+  "components": [
+    {
+      "kind": "package",
+      "name": "@hraness/convex",
+      "path": ".",
+      "visibility": "public",
+      "version": "0.1.0"
+    }
+  ],
+  "dependencies": [],
+  "deployments": [],
+  "brands": [],
+  "publications": [
+    {
+      "component": "@hraness/convex",
+      "packageName": "@hraness/convex",
+      "repository": "hraness/convex"
+    }
+  ]
+}

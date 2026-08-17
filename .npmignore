@@ -1,0 +1,12 @@
+.agents/
+.github/
+docs/
+kb/
+scripts/
+src/*.test.ts
+AGENTS.md
+CONTRIBUTING.md
+SECURITY.md
+STYLE.md
+WRITING.md
+portfolio-inventory.json
