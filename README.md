@@ -6,7 +6,7 @@ The root export parses untrusted deployment URLs into explicit missing, invalid,
 
 ## Install
 
-After the first immutable release is available, pin its exact tag:
+Pin the immutable release tag:
 
 ```json
 {
