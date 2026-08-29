@@ -7,7 +7,7 @@
 - `scripts/` builds and smoke-tests the packed package and checks its public inventory and repository boundary.
 - `docs/` records the package architecture and immutable release procedure.
 - `.github/workflows/` runs read-only continuous integration and verify-then-publish release automation.
-- `.agents/skills/` contains seven portable KB and phased-execution workflows.
+- `.agents/skills/` contains the portable KB workflows and five-skill phased-execution pack.
 - `kb/` contains authored repository rationale, maintained synthesis, and durable plans.
 - `WRITING.md` and `STYLE.md` define the internal and public prose contracts.
 
