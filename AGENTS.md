@@ -32,3 +32,7 @@
 - Run `bun run kb:check:lane` in an independent KB lane. The integrating agent runs `bun run kb:refresh` and `bun run kb:check`.
 - Run `bun run check` before handoff. Its package smoke must use genuine Node 24 for the pure parser, Bun for the launcher, and installed-consumer typechecks under Bundler and NodeNext.
 - Treat a `v*` tag as an irreversible release request. Obtain explicit confirmation for the exact version and commit, confirm repository-level immutable releases, and let the read-only verification job succeed before its write-scoped publisher creates the Release. Never move or recreate a release tag.
+
+<!-- hra-local-efficiency:start -->
+- Preserve useful agent fan-out. Give each expensive focused validation command and external wait one owner; the integration owner reviews that evidence and runs the repository-required aggregate or final gate once after convergence. Reuse evidence only for the exact Git tree, command, lockfiles, toolchain, relevant environment, and validity period, and never to skip a required final integration, merge, release, deployment, or production-verification gate. On Hraness development machines, use `$hra-local-efficiency` and the installed host scheduler for heavyweight top-level commands when available.
+<!-- hra-local-efficiency:end -->
