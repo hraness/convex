@@ -1,18 +1,10 @@
-import { createHash } from "node:crypto";
 import { readdir, readFile } from "node:fs/promises";
 import { extname, join, relative, resolve } from "node:path";
+import { assertPublicIdentity } from "./public-identity-boundary.js";
 
 const repositoryRoot = resolve(import.meta.dir, "..");
 const ignoredDirectories = new Set([".git", "dist", "node_modules"]);
 const textExtensions = new Set(["", ".json", ".md", ".mjs", ".ts", ".yml", ".yaml"]);
-const prohibitedIdentityDigests = [
-  [6, "91ed2ef15eee7102873d33d852cae9a195eff25e758269de6457723b1d8dc29a"],
-  [6, "46248ac689828800502186d8753cc5717c5c2b47712e8158705a510dc892f00b"],
-  [6, "9873901d452faea24d90edd18a9f2c9e6a8b2571e763f0b5876903b8f2018c55"],
-  [8, "bc62a3c14fec277e3dc6b504bf7c6348c2e421f8acc42032deddb0a96070f078"],
-  [8, "17043b3de380ea992249c7e0e2ab7e14cc0b28c8b86800e3ae67f9e55bbb1036"],
-  [6, "baa7789c3575dd04187cb8f40f2615e80949ae67309a14ed23ea52618b7d691b"],
-] as const;
 const localPathMarker = ["/", "Users", "/"].join("");
 const writeCapabilities = [
   ["packages", "write"].join(": "),
@@ -33,23 +25,17 @@ async function files(directory: string): Promise<string[]> {
   return paths;
 }
 
-for (const path of await files(repositoryRoot)) {
+const repositoryFiles = await files(repositoryRoot);
+if (!repositoryFiles.includes(join(repositoryRoot, "AGENTS.md"))) {
+  throw new Error("root AGENTS.md is required for public policy validation");
+}
+for (const path of repositoryFiles) {
   const contents = await readFile(path, "utf8");
   const repositoryPath = relative(repositoryRoot, path);
-  const normalized = contents.toLocaleLowerCase("en-US");
   if (contents.includes(localPathMarker)) {
     throw new Error(`${repositoryPath} contains an absolute local-user path`);
   }
-  for (const [length, expectedDigest] of prohibitedIdentityDigests) {
-    for (let index = 0; index <= normalized.length - length; index += 1) {
-      const digest = createHash("sha256")
-        .update(normalized.slice(index, index + length))
-        .digest("hex");
-      if (digest === expectedDigest) {
-        throw new Error(`${repositoryPath} contains a private product identity`);
-      }
-    }
-  }
+  assertPublicIdentity(repositoryPath, contents);
   if (repositoryPath.startsWith(`${join(".github", "workflows")}/`)) {
     for (const capability of writeCapabilities) {
       if (contents.includes(capability)) {
