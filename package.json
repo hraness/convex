@@ -1,7 +1,7 @@
 {
   "name": "@hraness/convex",
   "version": "0.1.0",
-  "description": "Validated Convex deployment configuration and fail-closed Vercel build tooling.",
+  "description": "Check Convex deployment settings and stop Vercel builds that would deploy to the wrong Convex deployment or run a Preview with a deploy key.",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
