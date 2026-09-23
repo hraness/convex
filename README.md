@@ -1,11 +1,14 @@
 # @hraness/convex
 
-Refuse ambiguous Convex deployments before a Vercel build can run them.
+Stop a Vercel build before it deploys to the wrong Convex deployment, and refuse
+any Preview build that carries a deploy key.
 
-`@hraness/convex` turns public deployment configuration into typed states, then
-plans Production, Preview, and local builds without letting a Preview carry a
-deployment credential. It does not replace the Convex SDK or choose a
-deployment for your application.
+`@hraness/convex` checks the Convex settings in your build environment and plans
+each Production, Preview, and local build. Production deploys only when Vercel's
+target, the deployment name in your source, and the production deploy key all
+agree. Preview builds read the production deployment as a client and never
+deploy. The package does not replace the Convex SDK or choose a deployment for
+your application.
 
 ## Install
 
@@ -132,7 +135,7 @@ Add `--run-app-build` only for the nested application-build entry.
 
 | Runtime | Checked result | Child command |
 | --- | --- | --- |
-| Vercel Production | Deploy only when the provider target, source-bound name, and `prod:<name>|…` key agree | `bun x convex deploy --cmd-url-env-var-name NEXT_PUBLIC_CONVEX_URL --cmd "bun run build"` |
+| Vercel Production | Deploy only when the provider target, source-bound name, and `prod:<name>\|…` key agree | `bun x convex deploy --cmd-url-env-var-name NEXT_PUBLIC_CONVEX_URL --cmd "bun run build"` |
 | Built-in Vercel Preview | Read the exact production deployment as an application-only client; reject every deploy key and token | `bun run build:app` |
 | Local development | Keep the normal Convex deploy path, but reject production markers and production-class keys | The same Convex deploy command |
 
@@ -148,10 +151,10 @@ There is no fallback from an ambiguous provider state into local behavior.
 | `runVercelConvexBuild` and `runVercelAppBuild` | Apply a checked plan through Bun | Starts one injected or Bun subprocess after a `run` plan |
 | `dist/vercel-build.js` | Use the same checked launcher as a Vercel build command | Same launcher boundary |
 
-## Trust boundary
+## What stays with your product
 
-This package owns configuration validation and build-target classification.
-Your product still owns:
+The package validates configuration and decides which kind of build to run.
+Your product still controls:
 
 - the production deployment name in reviewed source;
 - Convex functions, schema, generated clients, and application routes;
@@ -159,10 +162,10 @@ Your product still owns:
 - the application build command and its output;
 - product identity, authentication, and authorization.
 
-The generated Vercel hostname becomes
-`NEXT_PUBLIC_VERCEL_SURFACE_ORIGIN` for display evidence only. It is not an
-authentication, routing, or authorization authority. Every Convex deployment
-selector is removed before the nested application build.
+The generated Vercel hostname is copied into
+`NEXT_PUBLIC_VERCEL_SURFACE_ORIGIN` for display only. Do not use it for
+authentication, routing, or authorization. Every Convex deployment selector is
+removed from the environment before the nested application build runs.
 
 ## Compatibility and artifact facts
 
@@ -177,11 +180,9 @@ selector is removed before the nested application build.
 | Built launcher | `dist/vercel-build.js`, 5,646 bytes |
 | Package boundary | Nine files; root parser and `./vercel-build` are the only exports |
 
-The `v0.1.0` tag is reachable from current `main`, and the tagged
-`package.json` reports version `0.1.0`. The release workflow checks the tag,
-complete repository gate, package inventory, genuine Node import, Bun launcher,
-and installed Bundler and NodeNext consumers before it creates an immutable
-GitHub Release.
+Releases are immutable GitHub Releases, created only after the tagged commit
+passes the full repository check, the package inventory, a Node.js import, the
+Bun launcher, and installed Bundler and NodeNext consumers.
 
 ## API map
 
@@ -197,15 +198,16 @@ GitHub Release.
 - `planVercelAppBuild(environment)` plans the nested application build.
 - `runVercelConvexBuild(options)` applies the full plan.
 - `runVercelAppBuild(options)` applies the application-only plan.
-- `productionDeploymentNameEnvironmentVariable` names the source-bound marker.
-- `previewSurfaceOriginEnvironmentVariable` names the public Preview surface.
+- `productionDeploymentNameEnvironmentVariable` is `CONVEX_PRODUCTION_DEPLOYMENT_NAME`, the variable that carries the production deployment name.
+- `previewSurfaceOriginEnvironmentVariable` is `NEXT_PUBLIC_VERCEL_SURFACE_ORIGIN`, the display-only Preview hostname.
 - `VercelConvexBuildPlan`, `VercelAppBuildPlan`,
   `VercelConvexBuildRefusal`, `VercelConvexBuildEnvironment`, and
-  `VercelConvexBuildLauncher` describe the public planning and launch seams.
+  `VercelConvexBuildLauncher` are the types for build plans, refusals, inputs,
+  and the launcher.
 
 ## Development
 
-Install Bun 1.3.14 and a genuine Node.js 24 runtime, then run:
+Install Bun 1.3.14 and Node.js 24, then run:
 
 ```sh
 bun install --frozen-lockfile
@@ -214,7 +216,8 @@ bun run check
 
 The complete check validates the public inventory and repository boundary,
 lints and typechecks the source, rebuilds committed ESM output, runs example and
-property tests, packs the artifact, imports the parser with genuine Node 24,
+property tests, packs the artifact, imports the parser with Node.js 24 itself
+(not Bun),
 exercises the launcher with Bun and fake subprocesses, and typechecks installed
 consumers under Bundler and NodeNext resolution.
 
