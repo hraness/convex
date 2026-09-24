@@ -39,7 +39,7 @@ describe("public managed policy boundary", () => {
       block.replace(startMarker, ""),
       block.replace(endMarker, ""),
       `${endMarker}${block.slice(startMarker.length, -(endMarker.length + 1))}${startMarker}\n`,
-      block.replace(startMarker, "<!-- OOMPA-local-efficiency:start -->"),
+      block.replace(startMarker, "<!-- HRANESS-delivery:start -->"),
       block.replace(startMarker, "<!--hraness-delivery:start -->"),
       block.replace(endMarker, "<!-- hraness-delivery end -->"),
       ` ${block}`,
