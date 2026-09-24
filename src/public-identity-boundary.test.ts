@@ -4,8 +4,8 @@ import fc from "fast-check";
 import { assertPublicIdentity } from "../scripts/public-identity-boundary.js";
 
 const guide = readFileSync(new URL("../AGENTS.md", import.meta.url), "utf8");
-const startMarker = "<!-- oompa-local-efficiency:start -->";
-const endMarker = "<!-- oompa-local-efficiency:end -->";
+const startMarker = "<!-- hraness-delivery:start -->";
+const endMarker = "<!-- hraness-delivery:end -->";
 const block = guide.slice(guide.indexOf(startMarker), guide.indexOf(endMarker) + endMarker.length + 1);
 // This known collision is ordinary text in the reviewed public policy.
 // No other prohibited identity needs to be reconstructed for these proofs.
@@ -43,7 +43,7 @@ describe("public managed policy boundary", () => {
       block.replace(startMarker, "<!--oompa-local-efficiency:start -->"),
       block.replace(endMarker, "<!-- oompa-local-efficiency end -->"),
       ` ${block}`,
-      `${block}<!-- oompa-local-efficiency:start`,
+      `${block}<!-- hraness-delivery:start`,
     ]) {
       expect(() => { assertPublicIdentity("AGENTS.md", contents); }).toThrow("reviewed public managed policy");
     }

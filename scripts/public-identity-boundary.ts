@@ -9,18 +9,18 @@ const prohibitedIdentityDigests = [
   [6, "baa7789c3575dd04187cb8f40f2615e80949ae67309a14ed23ea52618b7d691b"],
 ] as const;
 
-const startMarker = "<!-- oompa-local-efficiency:start -->";
-const endMarker = "<!-- oompa-local-efficiency:end -->";
+const startMarker = "<!-- hraness-delivery:start -->";
+const endMarker = "<!-- hraness-delivery:end -->";
 // The reviewed 0.4.4 public policy, including both markers and its final LF.
 // A policy update requires another source review of this exact byte binding.
-const reviewedPolicyDigest = "49b0208121bade5c3329606f5f691611fa69921d7abaf8162ee088f3729cb73a";
+const reviewedPolicyDigest = "7838f69dd2e9db51715f9afa363c4d83962dff1b9ba391273eadd248c0950de1";
 
 function identityScanSegments(repositoryPath: string, contents: string): string[] {
   if (repositoryPath !== "AGENTS.md") return [contents];
 
   const start = contents.indexOf(startMarker);
   const end = contents.indexOf(endMarker);
-  const markerCount = [...contents.matchAll(/<!--\s*oompa-local-efficiency\b/giu)].length;
+  const markerCount = [...contents.matchAll(/<!--\s*hraness-delivery\b/giu)].length;
   const blockEnd = end + endMarker.length + 1;
   if (
     markerCount !== 2
