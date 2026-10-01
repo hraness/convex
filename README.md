@@ -167,22 +167,18 @@ The generated Vercel hostname is copied into
 authentication, routing, or authorization. Every Convex deployment selector is
 removed from the environment before the nested application build runs.
 
-## Compatibility and artifact facts
+## Compatibility
 
-| Fact | Current release |
+| Requirement | Support |
 | --- | --- |
-| Install identity | `v0.1.0`, matching package version `0.1.0` |
 | Runtime dependencies | Zero |
 | Module format | Side-effect-free ESM |
 | Root parser runtime | Node.js 24 or newer, Bun-compatible |
 | Build launcher runtime | Bun 1.3.14 |
-| Built parser | `dist/index.js`, 844 bytes |
-| Built launcher | `dist/vercel-build.js`, 5,646 bytes |
-| Package boundary | Nine files; root parser and `./vercel-build` are the only exports |
+| Exports | Root parser and `./vercel-build` |
 
-Releases are immutable GitHub Releases, created only after the tagged commit
-passes the full repository check, the package inventory, a Node.js import, the
-Bun launcher, and installed Bundler and NodeNext consumers.
+Releases are immutable GitHub Releases. See the [release procedure](docs/releasing.md)
+for versioning and publication checks.
 
 ## API map
 

@@ -2,7 +2,7 @@
 
 ## Package boundary
 
-`@hraness/convex` owns two stable, product-neutral seams. The root parser turns untrusted public configuration into a discriminated deployment state. The explicit `@hraness/convex/vercel-build` subpath owns Vercel target planning and the Bun subprocess boundary.
+`@hraness/convex` provides two product-neutral interfaces. The root parser turns untrusted public configuration into a discriminated deployment state. The explicit `@hraness/convex/vercel-build` subpath plans Vercel builds and launches them through Bun.
 
 Products retain deployment names, scripts, schemas, routes, backend functions, generated clients, and provider configuration. The package does not depend on product code or coordinate consumer upgrades.
 
