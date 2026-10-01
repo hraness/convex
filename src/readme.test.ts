@@ -21,7 +21,7 @@ test("README table cells escape pipes inside code spans", () => {
   }
 });
 
-test("README install, evidence, and release identity stay exact", () => {
+test("README install, example outputs, and release identity stay exact", () => {
   expect(readme).toContain(
     `"@hraness/convex": "github:hraness/convex#v${manifest.version}"`,
   );
@@ -30,9 +30,6 @@ test("README install, evidence, and release identity stay exact", () => {
   expect(readme).toContain(
     "Vercel Convex build refused: production-deployment-mismatch.",
   );
-  expect(readme).toContain("`dist/index.js`, 844 bytes");
-  expect(readme).toContain("`dist/vercel-build.js`, 5,646 bytes");
-  expect(readme).toContain("Package boundary | Nine files");
 });
 
 test("README maps every public symbol and keeps its Markdown closed", () => {

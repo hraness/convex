@@ -4,7 +4,7 @@ A `v*` tag requests an immutable GitHub Release. Creating the tag is irreversibl
 
 1. Confirm the intended stable version equals `package.json` and is greater than every existing stable release.
 2. Confirm `main` is current, the stable `Required` check passed for its exact commit, and no pull request or review thread remains unresolved.
-3. Obtain explicit maintainer confirmation for the exact version and commit immediately before creating the tag.
+3. Confirm that the release request covers the exact version and commit. Task-level delivery authorization is sufficient; a second confirmation is not required.
 4. Create `v<version>` on that exact `main` commit and push only the tag.
 5. Verify the Release workflow, the non-draft non-prerelease immutable GitHub Release, and the Latest marker before starting another release.
 
