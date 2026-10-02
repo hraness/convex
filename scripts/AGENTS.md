@@ -4,6 +4,7 @@
 - `package-smoke.ts` packs and installs the public artifact, verifies its runtime boundaries, and typechecks consumers.
 - `check-portfolio-inventory.ts` derives and compares the canonical public package inventory.
 - `check-public-boundary.ts` rejects private provenance, unexpected exports, mutating workflow scope, and package-surface drift.
+- `workflow-write-boundary.ts` decides which workflows may write; only `release.yml` and the App token input in `auto-tag.yml` may.
 
 # Guidelines
 

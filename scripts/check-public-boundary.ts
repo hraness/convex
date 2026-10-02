@@ -1,17 +1,12 @@
 import { readdir, readFile } from "node:fs/promises";
 import { extname, join, relative, resolve } from "node:path";
 import { assertPublicIdentity } from "./public-identity-boundary.js";
+import { workflowWriteViolation } from "./workflow-write-boundary.js";
 
 const repositoryRoot = resolve(import.meta.dir, "..");
 const ignoredDirectories = new Set([".git", "dist", "node_modules"]);
 const textExtensions = new Set(["", ".json", ".md", ".mjs", ".ts", ".yml", ".yaml"]);
 const localPathMarker = ["/", "Users", "/"].join("");
-const writeCapabilities = [
-  ["packages", "write"].join(": "),
-  ["id-token", "write"].join(": "),
-  ["pull-requests", "write"].join(": "),
-  ["npm", "publish"].join(" "),
-];
 
 async function files(directory: string): Promise<string[]> {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -37,17 +32,8 @@ for (const path of repositoryFiles) {
   }
   assertPublicIdentity(repositoryPath, contents);
   if (repositoryPath.startsWith(`${join(".github", "workflows")}/`)) {
-    for (const capability of writeCapabilities) {
-      if (contents.includes(capability)) {
-        throw new Error(`${repositoryPath} contains mutating capability ${capability}`);
-      }
-    }
-    if (
-      contents.includes(["contents", "write"].join(": "))
-      && repositoryPath !== ".github/workflows/release.yml"
-    ) {
-      throw new Error(`${repositoryPath} has unexpected contents write access`);
-    }
+    const violation = workflowWriteViolation(repositoryPath, contents);
+    if (violation !== undefined) throw new Error(violation);
   }
 }
 
