@@ -65,6 +65,20 @@ bare HTTPS origins and HTTP origins on the exact loopback hosts `localhost`,
 `127.0.0.1`, and `[::1]`. It rejects credentials, paths, queries, fragments,
 malformed URLs, and remote HTTP.
 
+## Recover from an invalid deployment URL
+
+| Parser result | Recovery |
+| --- | --- |
+| `missing` | Set the public deployment URL before constructing your Convex client. |
+| `not-a-url` | Supply a complete URL, including its scheme. |
+| `credentials` | Remove username and password fields. Keep credentials outside the public URL. |
+| `not-an-origin` | Use the origin alone, without an application path, query, or fragment. |
+| `insecure-remote` | Use HTTPS for a remote deployment. HTTP is accepted only for the three loopback hosts listed above. |
+
+An invalid result includes the original trimmed input. Avoid logging the whole result when that input might contain credentials or query secrets; report its `reason` and `message` instead.
+
+A `ready` result checks URL shape and transport, not deployment existence or ownership. Verify those in your application before using the URL for anything beyond client configuration.
+
 ## Plan a Preview without a deploy key
 
 The planner is pure. You can inspect the decision before any subprocess runs:
